@@ -84,6 +84,14 @@
   #toast .big{font-family:var(--serif);font-size:26px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
   #toast.show{animation:toastIn 3.4s ease forwards}
   @keyframes toastIn{0%{opacity:0;transform:translateX(-50%) translateY(8px)}12%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0}}
+  #waypt{top:64px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:12px;
+    background:rgba(8,8,10,.75);border:1px solid rgba(233,185,73,.45);padding:8px 16px;pointer-events:auto}
+  #waypt.on{display:flex}
+  #waypt svg{transition:transform .1s linear}
+  #wayptLabel{color:var(--gold)}
+  #wayptDist{color:var(--ink-dim);min-width:44px}
+  #wayptX{cursor:pointer;color:var(--ink-dim)}
+  #wayptX:hover{color:var(--gold)}
   /* ---- minimap ---- */
   #mapbox{position:fixed;right:22px;bottom:20px;z-index:10;pointer-events:none;text-align:right}
   #mapbox .cap{font-family:var(--caps);font-size:9px;letter-spacing:.3em;color:var(--ink-dim);margin-top:6px}
@@ -154,6 +162,7 @@
 <div class="hud" id="hintbar">
   <div class="chip" id="btnIndex"><b>G</b>DIRECTORY</div>
   <div class="chip" id="btnJoin"><b>J</b>GET INVOLVED</div>
+  <div class="chip" id="btnGuide"><b>T</b>WHERE TO?</div>
   <div class="chip" id="btnHelp"><b>H</b>HELP</div>
   <div class="chip" id="btnMap"><b>M</b>FLOOR PLAN</div>
   <div class="chip" id="btnSound"><b>N</b>SOUND</div>
@@ -161,6 +170,7 @@
 <div class="hud" id="prompt"><span class="key">E</span><span id="promptText">VIEW EXHIBIT</span></div>
 <div class="hud" id="crosshair"></div>
 <div class="hud" id="resumeChip">CLICK TO LOOK AROUND — OR STEER WITH ← →</div>
+<div class="hud" id="waypt"><svg id="wayptArrow" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2 L19 20 L12 15.5 L5 20 Z" fill="#e9b949"/></svg><span id="wayptLabel"></span><span id="wayptDist"></span><span id="wayptX" title="Stop guiding">✕</span></div>
 <div class="hud" id="toast"><div class="small">YOU ARE ENTERING</div><div class="big" id="toastText"></div></div>
 <div id="mapbox"><canvas id="minimap"></canvas><div class="cap">FLOOR PLAN</div></div>
 
@@ -200,6 +210,7 @@
     <tr><td>N</td><td>sound on / off</td></tr>
     <tr><td>V</td><td>audio guide (while reading)</td></tr>
     <tr><td>G</td><td>exhibit directory</td></tr>
+    <tr><td>T</td><td>wayfinding — guide arrow</td></tr>
     <tr><td>J</td><td>get involved</td></tr>
     <tr><td>0</td><td>reset your tour</td></tr>
   </table>
@@ -216,6 +227,26 @@
   <p id="certMeta" style="font-family:var(--caps);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-dim)"></p>
   <p style="font-style:italic;color:var(--gold)">May your optimizations be aligned.</p>
   <p class="navbtn" id="certJoin" style="font-family:var(--caps);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);margin-top:18px;border:1px solid var(--gold-dim);display:inline-block;padding:9px 18px">BROWSE WAYS TO JOIN THE EFFORT →</p>
+</div></div>
+
+<div class="overlay hidden" id="volun"><div class="card" style="width:min(470px,92vw);text-align:center;padding:42px 46px;background:var(--card);border:1px solid #2b2a30;outline:1px solid rgba(233,185,73,.28);outline-offset:6px">
+  <div class="dirhead">A Word From the Curators</div>
+  <h2 style="font-size:25px;font-weight:600;margin:14px 0 12px;color:var(--ink)">Hello — we are looking<br>for volunteers.</h2>
+  <p style="font-size:14.5px;line-height:1.7;color:#cfc9bb">The field behind these exhibits is small, understaffed, and hiring in every wing — writers, researchers, engineers, organizers. The gift-shop vending machines dispense real opportunities. Everything is free.</p>
+  <div style="margin-top:28px;display:flex;gap:10px;justify-content:center">
+    <div class="chip" id="volGo" style="border-color:var(--gold-dim);color:var(--gold)">SHOW ME THE WAY →</div>
+    <div class="chip" id="volLater">MAYBE LATER</div>
+  </div>
+</div></div>
+
+<div class="overlay hidden" id="guide"><div class="card" style="width:min(560px,92vw);padding:40px 44px;background:var(--card);border:1px solid #2b2a30;outline:1px solid rgba(233,185,73,.28);outline-offset:6px">
+  <div class="dirhead">Wayfinding</div>
+  <div class="dirsub">Pick a destination — a golden arrow will lead you · T or ESC to close</div>
+  <div class="dirgrid" style="grid-template-columns:1fr">
+    <div class="diritem wayto" data-w="evo"><span class="no">➊</span><span class="tt">Evolution: humans → AI → AGI &nbsp;<span style="color:var(--ink-dim);font-size:12px">the March of Progress mural, then the AGI departures board</span></span></div>
+    <div class="diritem wayto" data-w="office"><span class="no">➋</span><span class="tt">How work looked pre-AGI &nbsp;<span style="color:var(--ink-dim);font-size:12px">the Old Office diorama, behind glass</span></span></div>
+    <div class="diritem wayto" data-w="join"><span class="no">➌</span><span class="tt">Get involved &nbsp;<span style="color:var(--ink-dim);font-size:12px">the gift-shop vending machines</span></span></div>
+  </div>
 </div></div>
 
 <div class="overlay hidden" id="index"><div class="card">
@@ -1344,6 +1375,7 @@ addEventListener("keydown",e=>{
   if(e.code==="KeyN"){muted=!muted;if(master)master.gain.value=muted?0:0.5;toast(muted?"SOUND OFF":"SOUND ON",true);}
   if(e.code==="KeyV"&&overlayOpen==="placard")speakPlacard();
   if(e.code==="KeyG")overlayOpen==="index"?closeOverlays():openIndex();
+  if(e.code==="KeyT")overlayOpen==="guide"?closeOverlays():openGuide();
   if(e.code==="KeyJ")overlayOpen==="join"?closeOverlays():openJoin();
   if(overlayOpen==="placard"&&e.code==="ArrowRight")stepExhibit(1);
   if(overlayOpen==="placard"&&e.code==="ArrowLeft")stepExhibit(-1);
@@ -1434,7 +1466,7 @@ function openProduct(ch){
 function closeOverlays(){
   if(!overlayOpen)return;
   const was=overlayOpen;overlayOpen=null;placardCh=null;
-  ["placard","help","cert","index","join"].forEach(id=>$(id).classList.add("hidden"));
+  ["placard","help","cert","index","join","volun","guide"].forEach(id=>$(id).classList.add("hidden"));
   if(window.speechSynthesis)speechSynthesis.cancel();
   if(was==="placard"){sfxChime(false);
     if(visited.size===TOTAL&&!certShown){certShown=true;persist();
@@ -1452,8 +1484,33 @@ function speakPlacard(){
   const u=new SpeechSynthesisUtterance("Exhibit "+ex.n+". "+ex.t+". In the case: "+ex.obj+" "+ex.body.join(" "));
   u.rate=0.95;u.pitch=0.9;speechSynthesis.speak(u);
 }
-function openJoin(){closeOverlays();overlayOpen="join";$("join").classList.remove("hidden");
+let joinSeen=false;
+function openJoin(){closeOverlays();overlayOpen="join";joinSeen=true;$("join").classList.remove("hidden");
   if(document.pointerLockElement)document.exitPointerLock();sfxChime(true);}
+const WAYPOINTS={
+  evo:{x:18.5,y:4.4,label:"EVOLUTION — THE MARCH OF PROGRESS",
+       next:{x:46.5,y:11.9,label:"→ AGI — THE DEPARTURES BOARD"}},
+  office:{x:8.6,y:31.5,label:"THE OLD OFFICE — WORK BEFORE AGI"},
+  join:{x:14.0,y:34.2,label:"GET INVOLVED — THE GIFT SHOP"}
+};
+let waypoint=null;
+function setWaypoint(w){waypoint=w;$("waypt").classList.add("on");
+  $("wayptLabel").textContent=w.label;toast("FOLLOW THE GOLDEN ARROW",true);}
+function clearWaypoint(){waypoint=null;$("waypt").classList.remove("on");}
+function updateWaypoint(){
+  if(!waypoint)return;
+  const dx=waypoint.x-P.x,dy=waypoint.y-P.y,d=Math.hypot(dx,dy);
+  $("wayptDist").textContent=((d*2)|0)+" m";
+  $("wayptArrow").style.transform="rotate("+((Math.atan2(dy,dx)-P.ang)*180/Math.PI)+"deg)";
+  if(d<2.6){const w=waypoint;clearWaypoint();
+    toast("YOU HAVE ARRIVED");sfxChime(true);
+    if(w.next)setTimeout(()=>{if(!waypoint)setWaypoint(w.next);},1800);}
+}
+let volunShown=false;
+function openVolun(){overlayOpen="volun";$("volun").classList.remove("hidden");
+  if(document.pointerLockElement)document.exitPointerLock();sfxChime(true);}
+function openGuide(){closeOverlays();overlayOpen="guide";$("guide").classList.remove("hidden");
+  if(document.pointerLockElement)document.exitPointerLock();}
 /* escort service: walk the visitor to any exhibit */
 const EXPOS={};
 for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){const c=MAP[y][x];if(EXHIBITS[c])EXPOS[c]=[x,y];}
@@ -1537,6 +1594,9 @@ function drawMinimap(){
   mmx.save();mmx.translate(px,py);mmx.rotate(P.ang);
   mmx.fillStyle="#f2ede2";mmx.beginPath();
   mmx.moveTo(6,0);mmx.lineTo(-4,-4);mmx.lineTo(-4,4);mmx.closePath();mmx.fill();mmx.restore();
+  if(waypoint){
+    mmx.strokeStyle="#e9b949";mmx.lineWidth=2;
+    mmx.beginPath();mmx.arc(waypoint.x*MS,waypoint.y*MS,3.5+Math.sin(performance.now()*0.006)*1.8,0,7);mmx.stroke();}
 }
 
 /* ---------- movement ---------- */
@@ -1769,7 +1829,9 @@ function loop(t){
     if(++qFrames>90){qFrames=0;
       if(ema>18&&quality>0.5){quality=Math.max(0.5,quality*0.82);sizeScreen();}
       else if(ema<9.5&&quality<0.92){quality=Math.min(0.92,quality*1.12);sizeScreen();}}}
-  if(started){physics(dt);render();updatePrompt();if(mapOn)drawMinimap();}
+  if(started){physics(dt);render();updatePrompt();updateWaypoint();if(mapOn)drawMinimap();
+    if(!volunShown&&!joinSeen&&!overlayOpen&&performance.now()-startTime>34000){
+      volunShown=true;openVolun();}}
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -1793,6 +1855,12 @@ $("btnSound").addEventListener("click",()=>{muted=!muted;if(master)master.gain.v
 $("pcNext").addEventListener("click",()=>stepExhibit(1));
 $("pcPrev").addEventListener("click",()=>stepExhibit(-1));
 $("certJoin").addEventListener("click",()=>{closeOverlays();openJoin();});
+$("btnGuide").addEventListener("click",()=>overlayOpen==="guide"?closeOverlays():openGuide());
+$("guide").querySelectorAll(".wayto").forEach(el=>el.addEventListener("click",()=>{
+  closeOverlays();setWaypoint(WAYPOINTS[el.dataset.w]);}));
+$("volGo").addEventListener("click",()=>{closeOverlays();setWaypoint(WAYPOINTS.join);});
+$("volLater").addEventListener("click",()=>closeOverlays());
+$("wayptX").addEventListener("click",clearWaypoint);
 $("masthead").addEventListener("click",()=>{if(!started)return;closeOverlays();
   P.x=19.5;P.y=33.5;P.ang=-Math.PI/2;P.pitch=0;toast("THE FOYER");});
 updateCounter();

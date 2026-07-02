@@ -25,6 +25,7 @@ python3 -m http.server 8777
 | `N` | sound on/off |
 | `V` | audio guide (while reading a placard) |
 | `G` | museum directory — click any exhibit to be escorted there |
+| `T` | wayfinding — a golden arrow guides you (Evolution tour, Old Office, Gift Shop) |
 | `J` | the Gift Shop — volunteer, learn, join the field |
 | `H` | help · `0` in help resets your tour |
 | `← →` | previous / next exhibit (while reading a placard) |
@@ -74,6 +75,10 @@ Exhibit Nº 35, stands in the center of the Rotunda.
 Two **Gift Shop kiosks** flank the exit: real links to volunteer, study, and work in
 AI safety (BlueDot, AISafety.info, Apart Research, AI Safety Camp, 80,000 Hours, MATS,
 GovAI, and more). Also reachable any time with `J` or the on-screen buttons.
+
+Around thirty-five seconds into your visit, the curators will interrupt once —
+politely — to mention that the field is looking for volunteers, and offer to
+show you the way to the vending machines.
 
 Progress persists in `localStorage`. See all 35 exhibits for your certificate.
 Rendering resolution auto-tunes to hold 60 fps on your machine.
