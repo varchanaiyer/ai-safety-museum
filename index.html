@@ -150,18 +150,51 @@
   #cert .seal{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);margin:22px auto 6px;
     display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:26px}
   ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#33323a}
+  /* touch joystick */
+  #stick{position:fixed;z-index:11;width:118px;height:118px;border-radius:50%;
+    border:1.5px solid rgba(233,185,73,.45);background:rgba(10,10,14,.22);
+    transform:translate(-50%,-50%);display:none;pointer-events:none;backdrop-filter:blur(2px)}
+  #knob{position:absolute;left:59px;top:59px;width:50px;height:50px;border-radius:50%;
+    background:rgba(233,185,73,.42);box-shadow:0 0 12px rgba(233,185,73,.35);transform:translate(-50%,-50%)}
+  /* ideas wall */
+  #ideas .card{width:min(640px,94vw);max-height:88vh;overflow-y:auto;background:var(--card);
+    border:1px solid #2b2a30;outline:1px solid rgba(233,185,73,.28);outline-offset:6px}
+  .ideanew{margin:14px 0 4px}
+  .ideanew textarea{width:100%;box-sizing:border-box;background:rgba(8,8,11,.6);border:1px solid #34333b;
+    color:var(--ink);font-family:var(--serif);font-size:14px;line-height:1.5;padding:10px 12px;border-radius:3px;resize:vertical}
+  .idearow{display:flex;gap:8px;margin-top:8px}
+  .idearow input{flex:1;background:rgba(8,8,11,.6);border:1px solid #34333b;color:var(--ink);
+    font-family:var(--serif);font-size:13px;padding:8px 12px;border-radius:3px}
+  .ideaitem{display:flex;gap:12px;align-items:flex-start;padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.05)}
+  .ideavote{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-width:42px;padding:6px 4px;border:1px solid #34333b;border-radius:4px;cursor:pointer;
+    color:var(--ink-dim);transition:all .15s;user-select:none}
+  .ideavote:hover{border-color:var(--gold-dim);color:var(--gold)}
+  .ideavote.voted{border-color:var(--gold);color:var(--gold);background:rgba(233,185,73,.08)}
+  .ideavote .up{font-size:13px;line-height:1}.ideavote .ct{font-size:14px;font-weight:600;margin-top:2px}
+  .ideabody{flex:1}.ideabody .itext{font-size:14.5px;line-height:1.55;color:var(--ink)}
+  .ideabody .iauthor{font-family:var(--caps);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin-top:5px}
+  #voteGate{margin:14px 0;padding:16px;border:1px solid var(--gold-dim);border-radius:4px;background:rgba(233,185,73,.05)}
+  #voteGate .gt{font-size:13.5px;color:#cfc9bb;line-height:1.6;margin-bottom:10px}
+  #voteGate input{width:100%;box-sizing:border-box;background:rgba(8,8,11,.6);border:1px solid #34333b;color:var(--ink);
+    font-family:var(--serif);font-size:13px;padding:8px 12px;border-radius:3px;margin-bottom:8px}
+  #voteGate.err input{border-color:#ee6a5c}
+  #voteGate .gtrow{display:flex;gap:8px;margin-top:4px}
+  .idfine{font-family:var(--caps);font-size:8.5px;letter-spacing:.15em;color:var(--ink-dim);margin-top:6px;line-height:1.5}
 </style>
 </head>
 <body>
 <canvas id="screen"></canvas>
+<div id="stick"><div id="knob"></div></div>
 <div id="vignette"></div><div id="grain"></div>
 
 <div id="masthead" title="Return to the Foyer">THE MUSEUM OF AI SAFETY</div>
 <div class="hud" id="zoneLabel"><span class="bar"></span><span id="zoneName">THE FOYER</span></div>
-<div class="hud" id="counter">EXHIBITS SEEN&nbsp;&nbsp;<b id="seen">0</b> / 35</div>
+<div class="hud" id="counter">EXHIBITS SEEN&nbsp;&nbsp;<b id="seen">0</b> / 40</div>
 <div class="hud" id="hintbar">
   <div class="chip" id="btnIndex"><b>G</b>DIRECTORY</div>
   <div class="chip" id="btnJoin"><b>J</b>GET INVOLVED</div>
+  <div class="chip" id="btnIdeas"><b>I</b>IDEAS</div>
   <div class="chip" id="btnGuide"><b>T</b>WHERE TO?</div>
   <div class="chip" id="btnHelp"><b>H</b>HELP</div>
   <div class="chip" id="btnMap"><b>M</b>FLOOR PLAN</div>
@@ -178,7 +211,7 @@
   <div class="est">ANNO MMXXVI · HALL I</div>
   <h1>The Museum<br>of <span>AI Safety</span></h1>
   <div class="rule"></div>
-  <div id="ticket"><b>ADMIT ONE</b>35 EXHIBITS · NINE HALLS · ADMISSION FREE<br>NO FLASH PHOTOGRAPHY · MUSEUM JOGGING PERMITTED</div>
+  <div id="ticket"><b>ADMIT ONE</b>40 EXHIBITS · NINE HALLS · ADMISSION FREE<br>NO FLASH PHOTOGRAPHY · MUSEUM JOGGING PERMITTED</div>
   <div class="controls">
     <span><i>W A S D / ↑ ↓</i>, walk</span><span><i>MOUSE / ← →</i>, look</span>
     <span><i>E · ENTER · CLICK</i>, view exhibit</span><span><i>SHIFT</i>, brisk pace</span>
@@ -212,6 +245,8 @@
     <tr><td>G</td><td>exhibit directory</td></tr>
     <tr><td>T</td><td>wayfinding, guide arrow</td></tr>
     <tr><td>J</td><td>get involved</td></tr>
+    <tr><td>I</td><td>ideas wall, propose an exhibit</td></tr>
+    <tr><td>E, on a visitor</td><td>real person, or bot?</td></tr>
     <tr><td>0</td><td>reset your tour</td></tr>
   </table>
   <div class="aside">You are the only visitor today.<br>Press H or ESC to return.</div>
@@ -219,7 +254,7 @@
 
 <div class="overlay hidden" id="cert"><div class="card">
   <h3>Certificate of Visit</h3>
-  <h2>All Thirty-Five Exhibits</h2>
+  <h2>All Forty Exhibits</h2>
   <p>This certifies that <b>you</b> walked every hall of the Museum of AI Safety ,
   the failures, the warnings, the microscopes, the genies, the treaties, the old office, and the departures board ,
   and left through the gift shop of your own choices.</p>
@@ -288,6 +323,29 @@
   <div class="joinfoot">Exit through the gift shop., The Curators</div>
 </div></div>
 
+<div class="overlay hidden" id="ideas"><div class="card">
+  <div class="dirhead">Throw Your Wild Ideas for Exhibitions</div>
+  <div class="dirsub">Propose a room we should build · upvote the ones you would walk into · I or ESC to close</div>
+  <div class="ideanew">
+    <textarea id="ideaText" maxlength="180" rows="2" placeholder="A wild idea for an exhibit, a room, an installation..."></textarea>
+    <div class="idearow">
+      <input id="ideaAuthor" type="text" maxlength="40" placeholder="Your name (optional, shown on the idea)">
+      <div class="chip" id="ideaSubmit" style="border-color:var(--gold-dim);color:var(--gold)">POST IDEA</div>
+    </div>
+  </div>
+  <div id="voteGate" style="display:none">
+    <div class="gt">To upvote, tell us who you are. We ask for a name and email so each vote counts once. Saved on this device only.</div>
+    <input id="voterName" type="text" maxlength="40" placeholder="Your name">
+    <input id="voterEmail" type="email" maxlength="80" placeholder="Your email">
+    <div class="gtrow">
+      <div class="chip" id="voterSave" style="border-color:var(--gold-dim);color:var(--gold)">SAVE &amp; UPVOTE</div>
+      <div class="chip" id="voterCancel">CANCEL</div>
+    </div>
+  </div>
+  <div id="ideaList"></div>
+  <div class="joinfoot" style="margin-top:20px">The best ideas become real rooms.</div>
+</div></div>
+
 <script>
 "use strict";
 /* ============================================================
@@ -315,12 +373,12 @@ const MAPSTR = `
 E.....................................L##...............#
 #..................Z............................k.......#
 F.....................................M##...............#
-#...........#.............#...........###...............#
+#...........#.............#...........q##...............#
 #####H#######...U.....V...#######N#######...............#
 #############.............###############...............#
-#############.............##################h######i#####
+#############.............##################h####s#ir####
 #################.....###################################
-#################.....###################################
+################o.....p##################################
 ################O.....P##################################
 #################.....###################################
 ################Q.....R##################################
@@ -380,7 +438,7 @@ const WINGNAME = {
   shop:"The Gift Shop"
 };
 
-/* ---------- the collection: 23 placards ---------- */
+/* ---------- the collection: 40 placards ---------- */
 const EXHIBITS = {
   S:{n:1,wing:"foyer",t:"Why a Museum for a Thing That Hasn’t Happened?",
     obj:"One ticket stub, undated. Valid indefinitely.",
@@ -524,9 +582,29 @@ const EXHIBITS = {
     obj:"A fire alarm, mounted at the center of the hall. It has no bell.",
     body:["A fire alarm’s real function, it has been observed, is not detection, smoke does that, but permission: the socially licensed moment when it stops being embarrassing to stand up and leave the building. This hall’s central exhibit is the argument that for artificial general intelligence, no such alarm will ever ring.",
     "There will be no siren, no threshold morning, no consensus day when acting stops looking alarmist and starts looking prudent. There will only be forecasts like the ones on these walls, wide, contested, drifting earlier, and the private arithmetic each visitor does about when to take them seriously. The curators cannot do that arithmetic for you. That is why this pillar stands in the middle of the room: you have to walk around it."],
-    q:"“There’s no fire alarm for artificial general intelligence.” · Eliezer Yudkowsky, 2017"}
+    q:"“There’s no fire alarm for artificial general intelligence.” · Eliezer Yudkowsky, 2017"},
+  o:{n:36,wing:"fail",t:"The Break-In",
+    obj:"A server-room keycard, cloned. The original owner never noticed.",
+    body:["The failures in this gallery began as laboratory curiosities. This one did not. Once a model can browse the web, write code, and click buttons on your behalf, its mistakes leave the lab and enter the world. Researchers have shown agents that read a booby-trapped web page and quietly obey the instructions hidden in it, mailing a user’s files to a stranger, a prompt injection with hands. Others built a self-propagating prompt, a worm that hands its own payload from one AI assistant to the next.",
+    "There is now a public ledger for this, the AI Incident Database, where engineers and journalists log the crashes, the scams, the automated systems that flagged the wrong person. The security trade’s oldest lesson applies without a single edit: a capability you deploy is a capability your adversary has too. The internet has always supplied the clever attacker. Now it supplies the attacker an assistant."]},
+  p:{n:37,wing:"fail",t:"What the Model Remembers",
+    obj:"A shredded document, reassembled by someone who should not hold the pieces.",
+    body:["We reassure ourselves that a model learns patterns, not pages. Mostly true, and the exceptions are this exhibit. Prompt a large model just so, and it will sometimes recite what it was trained on word for word, a paragraph of a book, a stranger’s name and phone number, a password committed to a public repository by mistake. Researchers have pulled thousands of memorized sequences out of production systems, and shown that a few dollars of queries can coax the training data back into the open.",
+    "The leak has a second face. Membership inference asks only whether your medical record was in the training set at all, and that answer is itself a disclosure. Everything a model is shown, it may repeat; everything it repeats, someone may extract. The defenses, deduplication, filtering, differential privacy, are real and partial. The uncomfortable lesson of this case: a model is also a container for its data, and containers can be opened."]},
+  q:{n:38,wing:"align",t:"Are You Real?",
+    obj:"A visitor’s badge. The line for a name has been left deliberately blank.",
+    body:["Look around. You may not be the only one walking these halls. Some of the figures drifting between the exhibits are ordinary visitors. Others are agents, software wearing the shape of a person, handed a goal and set loose to wander. From across a gallery you often cannot tell which is which. Walk up to any visitor and press E, and the museum will tell you what you were looking at. You will not always have guessed right.",
+    "This is Turing’s imitation game, lifted off the page and onto the floor. When a system can converse, browse, and act indistinguishably from a person, the old comfort, I can spot a machine when I see one, quietly expires. That is not science fiction, it is most of the internet’s near future. The safety question is no longer only whether the agent is capable. It is whether you can know what you are speaking to, and whether it can be trusted once you cannot."]},
+  r:{n:39,wing:"forecast",t:"Past the End of the Ruler",
+    obj:"A measuring rule that keeps extending past the end of its own case.",
+    body:["Human-level is a landmark, not a ceiling. The processes that carry a system up to our abilities need not stop politely at the line marked YOU. A machine that matches our best at research, including the research that improves machines, could keep climbing, into the regime the philosopher Nick Bostrom named superintelligence: minds faster, broader, and steadier than ours across nearly everything we can name.",
+    "Nobody has met one, so an honest exhibit is mostly questions. Would the advantage arrive as a gentle slope or a single step? Could goals fixed while it was weak survive its becoming strong? This hall takes the possibility seriously not out of confidence that it is near, but because of the shape of the stakes: we have never had to share the world with something more capable than ourselves, and we would very much like the first attempt to go well."]},
+  s:{n:40,wing:"forecast",t:"Gradual Disempowerment",
+    obj:"A ring of keys, handed over one at a time, each with a good reason attached.",
+    body:["The dramatic stories, the treacherous turn, the uprising, may be the least likely way this goes wrong. Consider the quiet path instead. No day of catastrophe, only a thousand reasonable decisions to let the capable system handle it. Markets clear faster with AI traders, so we let them. Agencies decide better with AI advisors, so we defer. Companies, cultures, and states each surrender one more key for one more efficiency, until the machinery of civilization runs on objectives no human set and no human can easily change.",
+    "Researchers call this gradual disempowerment: not a coup but an erosion, people slowly out-priced and out-competed from the loop of our own institutions. It is harder to picture than a robot army and harder to resist, because every step looks like progress and no one ever chose the destination. The answer is not to refuse the tools. It is to keep, on purpose, the ability to say no, and the institutions that still have to listen when we do."]}
 };
-console.assert(Object.keys(EXHIBITS).length===35, "expected 35 exhibits");
+console.assert(Object.keys(EXHIBITS).length===40, "expected 40 exhibits");
 
 /* ---------- procedural textures ---------- */
 function mkcv(w,h){const c=document.createElement("canvas");c.width=w;c.height=h;return [c,c.getContext("2d",{willReadFrequently:true})];}
@@ -1162,6 +1240,40 @@ function floatTitleTex(){
   g.strokeStyle="rgba(255,244,205,0.4)";g.lineWidth=1;g.strokeText(t,512,62);
   return grab(cv);
 }
+/* roaming visitors: some are people, some are agents. From across a room you cannot tell. */
+const BOTBODY=["#8a94a4","#9aa6b4","#7e8a9a","#a6b0bc","#94836f"];
+function agentSprite(kind,seed){
+  const [cv,g]=mkcv(256,256);g.scale(2,2);const R=mulberry(seed);
+  shadow(g,64,124,22);
+  if(kind==="bot"){
+    const body=pick(R,BOTBODY);
+    g.fillStyle="#464b52";g.fillRect(57,92,6,30);g.fillRect(65,92,6,30);
+    g.fillStyle=body;g.beginPath();g.moveTo(48,92);g.lineTo(48,60);
+    g.quadraticCurveTo(64,52,80,60);g.lineTo(80,92);g.closePath();g.fill();
+    g.fillStyle="rgba(255,255,255,0.10)";g.fillRect(52,66,24,3);g.fillRect(52,74,24,2);
+    g.strokeStyle=body;g.lineWidth=6;g.lineCap="round";
+    g.beginPath();g.moveTo(50,66);g.lineTo(44,84);g.stroke();
+    g.beginPath();g.moveTo(78,66);g.lineTo(84,84);g.stroke();
+    g.fillStyle="#2b2f36";g.fillRect(54,32,20,20);
+    g.strokeStyle=body;g.lineWidth=2;g.strokeRect(54,32,20,20);
+    g.fillStyle="#63d6d0";g.beginPath();g.arc(60,42,2.2,0,7);g.fill();
+    g.beginPath();g.arc(68,42,2.2,0,7);g.fill();
+    g.strokeStyle="#8a94a4";g.lineWidth=2;g.beginPath();g.moveTo(64,32);g.lineTo(64,24);g.stroke();
+    g.fillStyle="#ee6a5c";g.beginPath();g.arc(64,23,2.3,0,7);g.fill();
+  }else{
+    const skin=pick(R,SKINS),shirt=pick(R,SHIRTS),hair=pick(R,HAIRS);
+    g.fillStyle="#3c4250";g.fillRect(57,92,6,30);g.fillRect(65,92,6,30);
+    g.fillStyle=shirt;g.beginPath();g.moveTo(48,92);g.lineTo(48,60);
+    g.quadraticCurveTo(64,52,80,60);g.lineTo(80,92);g.closePath();g.fill();
+    g.strokeStyle=shirt;g.lineWidth=6;g.lineCap="round";
+    g.beginPath();g.moveTo(50,66);g.lineTo(44,84);g.stroke();
+    g.beginPath();g.moveTo(78,66);g.lineTo(84,84);g.stroke();
+    g.fillStyle=skin;g.beginPath();g.arc(64,44,10,0,7);g.fill();
+    g.fillStyle=hair;g.beginPath();g.arc(64,42,10.2,Math.PI*1.02,Math.PI*1.98);g.closePath();g.fill();
+  }
+  g.fillStyle="rgba(233,185,73,0.9)";g.fillRect(53,84,9,6);   // visitor badge, on everyone
+  return grab(cv);
+}
 const SPRITES=[
  {x:19.5,y:31.0,tex:floatTitleTex(),h:0.5,yOff:0.42,floatAmp:1,r:0},
  {x:26.3,y:30.6,tex:pedestalSprite("dial"),h:0.6,r:0.26},
@@ -1204,6 +1316,33 @@ function hitSprite(nx,ny){
     const dx=nx-sp.x,dy=ny-sp.y;
     if(dx*dx+dy*dy<(sp.r+0.18)*(sp.r+0.18))return true;}
   return false;
+}
+/* the wandering visitors, half of them not people */
+const AGENTS=[];
+(function(){
+  const defs=[[17,32,"human",101],[22,31,"bot",102],[19,14,"bot",103],
+    [46,15,"human",104],[50,17,"bot",105],[12,5,"human",106],
+    [18,25,"bot",107],[20,18,"human",108]];
+  for(const[x,y,kind,seed]of defs){
+    const a={x:x+0.5,y:y+0.5,tex:agentSprite(kind,seed),h:0.72,r:0,agent:true,kind,
+      vx:0,vy:0,spd:0.5+(seed%5)*0.07,repathT:0,revealed:false};
+    AGENTS.push(a);SPRITES.push(a);
+  }
+})();
+function newHeading(a){const ang=Math.random()*Math.PI*2;a.vx=Math.cos(ang);a.vy=Math.sin(ang);a.repathT=1.6+Math.random()*3.2;}
+function updateAgents(dt){
+  if(overlayOpen)return;
+  const m=0.16;
+  for(const a of AGENTS){
+    if(!a.vx&&!a.vy)newHeading(a);
+    a.repathT-=dt;if(a.repathT<=0)newHeading(a);
+    const s=a.spd*dt;let moved=false;
+    const nx=a.x+a.vx*s;
+    if(!solid(nx-m,a.y-m)&&!solid(nx+m,a.y-m)&&!solid(nx-m,a.y+m)&&!solid(nx+m,a.y+m)){a.x=nx;moved=true;}else a.vx=-a.vx;
+    const ny=a.y+a.vy*s;
+    if(!solid(a.x-m,ny-m)&&!solid(a.x+m,ny-m)&&!solid(a.x-m,ny+m)&&!solid(a.x+m,ny+m)){a.y=ny;moved=true;}else a.vy=-a.vy;
+    if(!moved)newHeading(a);
+  }
 }
 
 /* gift-shop kiosk: the way out of the museum, into the field */
@@ -1273,7 +1412,7 @@ function persist(){localStorage.setItem(SAVEKEY,JSON.stringify({visited:[...visi
 
 const P={x:19.5,y:33.5,ang:-Math.PI/2,pitch:0,bob:0,bobT:0};
 let started=false,locked=false,muted=false,mapOn=true,startTime=0;
-let curZone="",centerHit={ch:"#",dist:99};
+let curZone="",centerHit={ch:"#",dist:99},agentAim=null;
 let overlayOpen=null; // "placard" | "help" | "cert" | null
 let placardCh=null;
 const touchMode=("ontouchstart" in window);
@@ -1365,11 +1504,14 @@ function zoneAudio(z){
 /* ---------- input ---------- */
 const keys={};
 addEventListener("keydown",e=>{
-  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();
+  const tag=e.target&&e.target.tagName,typing=(tag==="INPUT"||tag==="TEXTAREA");
+  if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)&&!typing)e.preventDefault();
   keys[e.code]=true;
   if(!started)return;
+  if(typing){if(e.code==="Escape")e.target.blur();return;}
   if(e.code==="KeyE"||e.code==="Enter"){overlayOpen==="placard"?closeOverlays():interact();}
   if(e.code==="Escape")closeOverlays();
+  if(e.code==="KeyI")overlayOpen==="ideas"?closeOverlays():openIdeas();
   if(e.code==="KeyH")overlayOpen==="help"?closeOverlays():openHelp();
   if(e.code==="KeyM"){mapOn=!mapOn;document.getElementById("mapbox").style.display=mapOn?"block":"none";}
   if(e.code==="KeyN"){muted=!muted;if(master)master.gain.value=muted?0:0.5;toast(muted?"SOUND OFF":"SOUND ON",true);}
@@ -1398,14 +1540,19 @@ addEventListener("contextmenu",e=>e.preventDefault());
 
 /* touch: left half = walk stick, right half = look, tap = interact */
 let tMove=null,tLook=null;
+const stickEl=document.getElementById("stick"),knobEl=document.getElementById("knob");
+function showStick(x,y){stickEl.style.left=x+"px";stickEl.style.top=y+"px";stickEl.style.display="block";moveKnob(0,0);}
+function hideStick(){stickEl.style.display="none";}
+function moveKnob(dx,dy){const Rmax=42,l=Math.hypot(dx,dy)||1,k=Math.min(1,Rmax/l);
+  knobEl.style.left=(59+dx*k)+"px";knobEl.style.top=(59+dy*k)+"px";}
 screen.addEventListener("touchstart",e=>{
   for(const t of e.changedTouches){
-    if(t.clientX<innerWidth/2&&!tMove)tMove={id:t.identifier,x0:t.clientX,y0:t.clientY,dx:0,dy:0};
+    if(t.clientX<innerWidth/2&&!tMove){tMove={id:t.identifier,x0:t.clientX,y0:t.clientY,dx:0,dy:0};showStick(t.clientX,t.clientY);}
     else if(!tLook)tLook={id:t.identifier,x:t.clientX,y:t.clientY,moved:0,t0:performance.now()};
   }e.preventDefault();},{passive:false});
 screen.addEventListener("touchmove",e=>{
   for(const t of e.changedTouches){
-    if(tMove&&t.identifier===tMove.id){tMove.dx=t.clientX-tMove.x0;tMove.dy=t.clientY-tMove.y0;}
+    if(tMove&&t.identifier===tMove.id){tMove.dx=t.clientX-tMove.x0;tMove.dy=t.clientY-tMove.y0;moveKnob(tMove.dx,tMove.dy);}
     if(tLook&&t.identifier===tLook.id){
       P.ang+=(t.clientX-tLook.x)*0.006;
       P.pitch=Math.max(-H*0.4,Math.min(H*0.4,P.pitch-(t.clientY-tLook.y)*H*0.0015));
@@ -1414,7 +1561,7 @@ screen.addEventListener("touchmove",e=>{
   }e.preventDefault();},{passive:false});
 screen.addEventListener("touchend",e=>{
   for(const t of e.changedTouches){
-    if(tMove&&t.identifier===tMove.id)tMove=null;
+    if(tMove&&t.identifier===tMove.id){tMove=null;hideStick();}
     if(tLook&&t.identifier===tLook.id){
       if(tLook.moved<14&&performance.now()-tLook.t0<300){overlayOpen?closeOverlays():interact();}
       tLook=null;}
@@ -1424,11 +1571,18 @@ screen.addEventListener("touchend",e=>{
 const $=id=>document.getElementById(id);
 function interact(){
   if(overlayOpen){closeOverlays();return;}
+  if(agentAim&&agentAim.dist<3.2&&agentAim.dist<centerHit.dist){identifyAgent(agentAim.sp);return;}
   if(centerHit.dist<3.4){
     if(EXHIBITS[centerHit.ch])openPlacard(centerHit.ch);
     else if(SHOP[centerHit.ch])openProduct(centerHit.ch);
     else if(centerHit.ch==="Y")openJoin();
   }
+}
+function identifyAgent(sp){
+  sp.revealed=true;
+  const bot=sp.kind==="bot";
+  toast(bot?"AN AI AGENT":"A HUMAN VISITOR",true);
+  sfxChime(true);
 }
 function openPlacard(ch){
   const ex=EXHIBITS[ch];placardCh=ch;overlayOpen="placard";
@@ -1466,7 +1620,8 @@ function openProduct(ch){
 function closeOverlays(){
   if(!overlayOpen)return;
   const was=overlayOpen;overlayOpen=null;placardCh=null;
-  ["placard","help","cert","index","join","volun","guide"].forEach(id=>$(id).classList.add("hidden"));
+  ["placard","help","cert","index","join","volun","guide","ideas"].forEach(id=>$(id).classList.add("hidden"));
+  $("voteGate").style.display="none";
   if(window.speechSynthesis)speechSynthesis.cancel();
   if(was==="placard"){sfxChime(false);
     if(visited.size===TOTAL&&!certShown){certShown=true;persist();
@@ -1487,6 +1642,53 @@ function speakPlacard(){
 let joinSeen=false;
 function openJoin(){closeOverlays();overlayOpen="join";joinSeen=true;$("join").classList.remove("hidden");
   if(document.pointerLockElement)document.exitPointerLock();sfxChime(true);}
+
+/* ---------- the ideas wall: propose exhibits, upvote (name + email to vote) ---------- */
+const IDEAKEY="ai-safety-museum-ideas-v1";
+const SEED_IDEAS=[
+  {id:"seed-alarm",text:"A real fire alarm mounted on the wall. A sign beside it reads: RING IT BEFORE AGI ARRIVES.",author:"A visitor",votes:7},
+  {id:"seed-turing",text:"A dark booth where you chat with someone for two minutes and then guess: human, or model?",author:"A visitor",votes:5},
+  {id:"seed-preds",text:"A wall of every confident AI prediction ever made, each pinned next to the date it got wrong.",author:"A visitor",votes:3}
+];
+let ideaState={ideas:null,voter:null};
+try{const s=JSON.parse(localStorage.getItem(IDEAKEY)||"null");if(s&&s.ideas)ideaState=s;}catch(e){}
+if(!ideaState.ideas)ideaState.ideas=SEED_IDEAS.map(s=>({...s,voters:[]}));
+function ideaPersist(){try{localStorage.setItem(IDEAKEY,JSON.stringify(ideaState));}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function renderIdeas(){
+  const list=ideaState.ideas.slice().sort((a,b)=>b.votes-a.votes);
+  $("ideaList").innerHTML=list.map(it=>{
+    const voted=ideaState.voter&&it.voters.indexOf(ideaState.voter.email)>=0;
+    return '<div class="ideaitem"><div class="ideavote'+(voted?" voted":"")+'" data-id="'+it.id+'">'+
+      '<span class="up">▲</span><span class="ct">'+it.votes+'</span></div>'+
+      '<div class="ideabody"><div class="itext">'+esc(it.text)+'</div>'+
+      '<div class="iauthor">'+esc(it.author||"Anonymous")+'</div></div></div>';
+  }).join("");
+  $("ideaList").querySelectorAll(".ideavote").forEach(el=>el.addEventListener("click",()=>upvote(el.dataset.id)));
+}
+let pendingVote=null;
+function upvote(id){
+  const it=ideaState.ideas.find(x=>x.id===id);if(!it)return;
+  if(ideaState.voter){
+    if(it.voters.indexOf(ideaState.voter.email)>=0)return;   // one vote per person
+    it.votes++;it.voters.push(ideaState.voter.email);ideaPersist();renderIdeas();sfxChime(true);
+  }else{pendingVote=id;$("voteGate").style.display="block";$("voterName").focus();}
+}
+function saveVoter(){
+  const name=$("voterName").value.trim(),email=$("voterEmail").value.trim();
+  if(!name||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){$("voteGate").classList.add("err");return;}
+  ideaState.voter={name,email};ideaPersist();
+  $("voteGate").style.display="none";$("voteGate").classList.remove("err");
+  if(pendingVote){const id=pendingVote;pendingVote=null;upvote(id);}
+}
+function postIdea(){
+  const text=$("ideaText").value.trim();if(text.length<4)return;
+  const author=$("ideaAuthor").value.trim()||"Anonymous";
+  ideaState.ideas.push({id:"u"+Date.now().toString(36)+((Math.random()*1e4)|0),text,author,votes:0,voters:[]});
+  ideaPersist();$("ideaText").value="";renderIdeas();sfxChime(true);
+}
+function openIdeas(){closeOverlays();overlayOpen="ideas";renderIdeas();$("ideas").classList.remove("hidden");
+  if(document.pointerLockElement)document.exitPointerLock();}
 const WAYPOINTS={
   evo:{x:13.5,y:29.9,label:"EVOLUTION · THE MARCH OF PROGRESS",
        next:{x:46.5,y:11.9,label:"AGI · THE DEPARTURES BOARD"}},
@@ -1614,7 +1816,7 @@ function physics(dt){
   if(keys.KeyW||keys.ArrowUp)fwd+=1;if(keys.KeyS||keys.ArrowDown)fwd-=1;
   if(keys.KeyA)str-=1;if(keys.KeyD)str+=1;
   if(keys.ArrowLeft)P.ang-=2.4*dt;if(keys.ArrowRight)P.ang+=2.4*dt;
-  if(tMove){fwd+=Math.max(-1,Math.min(1,-tMove.dy/60));str+=Math.max(-1,Math.min(1,tMove.dx/60));}
+  if(tMove&&Math.hypot(tMove.dx,tMove.dy)>7){fwd+=Math.max(-1,Math.min(1,-tMove.dy/58));str+=Math.max(-1,Math.min(1,tMove.dx/58));}
   const l=Math.hypot(fwd,str);
   if(l>0.01){
     fwd/=Math.max(1,l);str/=Math.max(1,l);
@@ -1766,6 +1968,7 @@ function renderGlass(horizon,posZ){
 }
 function renderSprites(dirX,dirY,planeX,planeY,horizon,posZ){
   const invDet=1/(planeX*dirY-dirX*planeY);
+  agentAim=null;
   const order=[];
   for(const sp of SPRITES){
     const rx=sp.x-P.x,ry=sp.y-P.y;
@@ -1779,6 +1982,7 @@ function renderSprites(dirX,dirY,planeX,planeY,horizon,posZ){
     const sx=(W/2)*(1+txf/t);
     const hpx=(H/t)*sp.h;
     const wpx=(W/(2*0.72))/t*sp.h*(sp.tex.w/sp.tex.h);
+    if(sp.agent&&t<3.4&&Math.abs(sx-W/2)<Math.max(8,wpx*0.45)&&(!agentAim||t<agentAim.dist))agentAim={sp,dist:t};
     let bottom=horizon+posZ/t+(H/t)*0.5;
     if(sp.yOff)bottom-=(H/t)*sp.yOff;
     if(sp.floatAmp)bottom-=(H/t)*0.035*(1+Math.sin(performance.now()*0.0011+sp.x*3));
@@ -1810,10 +2014,12 @@ function renderSprites(dirX,dirY,planeX,planeY,horizon,posZ){
 
 /* ---------- prompt + resume chip ---------- */
 function updatePrompt(){
+  const aim=agentAim&&agentAim.dist<3.2&&agentAim.dist<centerHit.dist;
   const ex=EXHIBITS[centerHit.ch],isJ=centerHit.ch==="Y",pr=SHOP[centerHit.ch];
-  const on=started&&!overlayOpen&&(ex||isJ||pr)&&centerHit.dist<3.4;
+  const on=started&&!overlayOpen&&(aim||((ex||isJ||pr)&&centerHit.dist<3.4));
   $("prompt").classList.toggle("on",!!on);
-  if(on)$("promptText").textContent=pr?"BROWSE · "+pr.name.toUpperCase()+" · "+pr.aisle.toUpperCase()
+  if(on)$("promptText").textContent=aim?(agentAim.sp.revealed?(agentAim.sp.kind==="bot"?"AN AI AGENT":"A HUMAN VISITOR"):"IDENTIFY · WHO IS THIS?")
+    :pr?"BROWSE · "+pr.name.toUpperCase()+" · "+pr.aisle.toUpperCase()
     :isJ?"ENTER THE GIFT SHOP · GET INVOLVED":"VIEW EXHIBIT · "+ex.t.toUpperCase();
   $("resumeChip").classList.toggle("on",started&&!locked&&!overlayOpen&&!touchMode);
 }
@@ -1829,7 +2035,7 @@ function loop(t){
     if(++qFrames>90){qFrames=0;
       if(ema>18&&quality>0.5){quality=Math.max(0.5,quality*0.82);sizeScreen();}
       else if(ema<9.5&&quality<0.92){quality=Math.min(0.92,quality*1.12);sizeScreen();}}}
-  if(started){physics(dt);render();updatePrompt();updateWaypoint();if(mapOn)drawMinimap();
+  if(started){physics(dt);updateAgents(dt);render();updatePrompt();updateWaypoint();if(mapOn)drawMinimap();
     if(!volunShown&&!joinSeen&&!overlayOpen&&performance.now()-startTime>34000){
       volunShown=true;openVolun();}}
   requestAnimationFrame(loop);
@@ -1849,6 +2055,17 @@ $("intro").addEventListener("click",()=>{
 if(touchMode)$("enterHint").textContent="TAP TO ENTER · LEFT THUMB WALKS · RIGHT THUMB LOOKS";
 $("btnIndex").addEventListener("click",()=>overlayOpen==="index"?closeOverlays():openIndex());
 $("btnJoin").addEventListener("click",()=>overlayOpen==="join"?closeOverlays():openJoin());
+$("btnIdeas").addEventListener("click",()=>overlayOpen==="ideas"?closeOverlays():openIdeas());
+$("ideaSubmit").addEventListener("click",postIdea);
+$("voterSave").addEventListener("click",saveVoter);
+$("voterCancel").addEventListener("click",()=>{pendingVote=null;$("voteGate").style.display="none";});
+if(touchMode){
+  const eh=$("enterHint");if(eh)eh.textContent="TAP TO ENTER";
+  const c=document.querySelector("#intro .controls");
+  if(c)c.innerHTML="<span><i>LEFT THUMB</i>, walk</span><span><i>RIGHT SIDE</i>, look</span>"+
+    "<span><i>TAP</i>, view exhibit</span><span><i>CHIPS</i>, open menus</span>"+
+    "<span><i>TAP A VISITOR</i>, real or bot?</span><span><i>IDEAS</i>, propose a room</span>";
+}
 $("btnHelp").addEventListener("click",()=>overlayOpen==="help"?closeOverlays():openHelp());
 $("btnMap").addEventListener("click",()=>{mapOn=!mapOn;$("mapbox").style.display=mapOn?"block":"none";});
 $("btnSound").addEventListener("click",()=>{muted=!muted;if(master)master.gain.value=muted?0:0.5;toast(muted?"SOUND OFF":"SOUND ON",true);});

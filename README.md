@@ -2,7 +2,11 @@
 
 A first-person, walkable museum in a single HTML file. No dependencies, no build step,
 no network, a software-rendered raycasting engine (the *Wolfenstein 3D* technique),
-procedural textures, synthesized WebAudio ambience, and 23 curated exhibits on AI safety.
+procedural textures, synthesized WebAudio ambience, and 40 curated exhibits on AI safety.
+
+Some of the other visitors walking the halls are real people; some are AI agents. From
+across a gallery you often cannot tell. Walk up to any visitor and press `E`, and the
+museum will tell you which you were looking at.
 
 ## Run it
 
@@ -27,15 +31,27 @@ python3 -m http.server 8777
 | `G` | museum directory, click any exhibit to be escorted there |
 | `T` | wayfinding, a golden arrow guides you (Evolution tour, Old Office, Gift Shop) |
 | `J` | the Gift Shop, volunteer, learn, join the field |
+| `I` | the ideas wall, propose an exhibit and upvote others |
+| `E` on a visitor | identify them, real person or AI agent? |
 | `H` | help · `0` in help resets your tour |
 | `← →` | previous / next exhibit (while reading a placard) |
 
-On phones: left thumb walks, right thumb looks, tap to open exhibits.
+On phones: left thumb walks (a joystick appears under it), right thumb looks, tap to
+open exhibits or identify a visitor.
+
+## The ideas wall
+
+Press `I` (or the on-screen **IDEAS** button) to open *Throw Your Wild Ideas for
+Exhibitions*: propose a room the museum should build, and upvote the ones you would walk
+into. To keep each vote to one person, upvoting asks for a name and email. Ideas and
+votes are stored in `localStorage` on your own device (the file makes no network calls),
+so a shared, server-backed board would be a natural next step.
 
 ## The floor plan
 
-Eight halls, 34 exhibits, the Foyer, the Gallery of Failures (adversarial examples,
-jailbreaks, shortcut learning, sycophancy), the Rotunda with four governance pillars
+Eight halls, 40 exhibits, the Foyer, the Gallery of Failures (adversarial examples,
+jailbreaks, shortcut learning, sycophancy, plus the modern-incident wing, real cyber
+break-ins and training-data leaks), the Rotunda with four governance pillars
 under a skylight, Origins Hall (Wiener, Turing, Good, the paperclip era), the Glass
 Brain (interpretability), and the Genie Room (alignment), plus two newer wings:
 
@@ -80,7 +96,7 @@ Around thirty-five seconds into your visit, the curators will interrupt once ,
 politely, to mention that the field is looking for volunteers, and offer to
 show you the way to the vending machines.
 
-Progress persists in `localStorage`. See all 35 exhibits for your certificate.
+Progress persists in `localStorage`. See all 40 exhibits for your certificate.
 Rendering resolution auto-tunes to hold 60 fps on your machine.
 
 The map is a grid of text, edit `MAPSTR` in `index.html` to renovate the building;
